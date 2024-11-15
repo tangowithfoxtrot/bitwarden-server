@@ -91,5 +91,6 @@ public interface IMailService
     Task SendInitiateDeletProviderEmailAsync(string email, Provider provider, string token);
     Task SendInitiateDeleteOrganzationEmailAsync(string email, Organization organization, string token);
     Task SendRequestSMAccessToAdminEmailAsync(IEnumerable<string> adminEmails, string organizationName, string userRequestingAccess, string emailContent);
+    Task SendVerifiedDomainUserEmailAsync(string email, Organization organization);
 }
 
