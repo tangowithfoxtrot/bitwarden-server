@@ -3,6 +3,7 @@ using Bit.Core.AdminConsole.Entities.Provider;
 using Bit.Core.Auth.Entities;
 using Bit.Core.Billing.Enums;
 using Bit.Core.Entities;
+using Bit.Core.Models.Data.Organizations;
 using Bit.Core.Models.Mail;
 
 namespace Bit.Core.Services;
@@ -302,6 +303,6 @@ public class NoopMailService : IMailService
         return Task.FromResult(0);
     }
     public Task SendRequestSMAccessToAdminEmailAsync(IEnumerable<string> adminEmails, string organizationName, string userRequestingAccess, string emailContent) => throw new NotImplementedException();
-    public Task SendVerifiedDomainUserEmailAsync(string email, Organization organization) => Task.CompletedTask;
+    public Task SendVerifiedDomainUserEmailAsync(ManagedUserDomainClaimedEmails emailList) => Task.CompletedTask;
 }
 

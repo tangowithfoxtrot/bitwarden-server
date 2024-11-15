@@ -3,6 +3,7 @@ using Bit.Core.AdminConsole.Entities.Provider;
 using Bit.Core.Auth.Entities;
 using Bit.Core.Billing.Enums;
 using Bit.Core.Entities;
+using Bit.Core.Models.Data.Organizations;
 using Bit.Core.Models.Mail;
 
 namespace Bit.Core.Services;
@@ -91,6 +92,6 @@ public interface IMailService
     Task SendInitiateDeletProviderEmailAsync(string email, Provider provider, string token);
     Task SendInitiateDeleteOrganzationEmailAsync(string email, Organization organization, string token);
     Task SendRequestSMAccessToAdminEmailAsync(IEnumerable<string> adminEmails, string organizationName, string userRequestingAccess, string emailContent);
-    Task SendVerifiedDomainUserEmailAsync(string email, Organization organization);
+    Task SendVerifiedDomainUserEmailAsync(ManagedUserDomainClaimedEmails emailList);
 }
 
