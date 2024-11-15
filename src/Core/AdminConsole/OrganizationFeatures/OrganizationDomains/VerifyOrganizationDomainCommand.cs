@@ -28,8 +28,6 @@ public class VerifyOrganizationDomainCommand(
     ILogger<VerifyOrganizationDomainCommand> logger)
     : IVerifyOrganizationDomainCommand
 {
-
-
     public async Task<OrganizationDomain> UserVerifyOrganizationDomainAsync(OrganizationDomain organizationDomain)
     {
         var actingUser = new StandardUser(currentContext.UserId ?? Guid.Empty, await currentContext.OrganizationOwner(organizationDomain.OrganizationId));
@@ -46,7 +44,7 @@ public class VerifyOrganizationDomainCommand(
         return domainVerificationResult;
     }
 
-    public async Task<OrganizationDomain> SystemVerifyOrganizationDomainAsync(OrganizationDomain organizationDomain) // need request object to hold who is doing the action
+    public async Task<OrganizationDomain> SystemVerifyOrganizationDomainAsync(OrganizationDomain organizationDomain)
     {
         var actingUser = new SystemUser(EventSystemUser.DomainVerification);
 
@@ -121,10 +119,8 @@ public class VerifyOrganizationDomainCommand(
     {
         if (featureService.IsEnabled(FeatureFlagKeys.AccountDeprovisioning))
         {
-            await policyService.SaveAsync(
-                new Policy { OrganizationId = organizationId, Type = PolicyType.SingleOrg, Enabled = true },
-                savingUserId: actingUser is StandardUser standardUser ? standardUser.UserId : null,
-                eventSystemUser: actingUser is SystemUser systemUser ? systemUser.SystemUserType : null);
+            await EnableSingleOrganizationPolicyAsync(organizationId, actingUser);
+            await SendVerifiedDomainUserEmailAsync(organizationId);
         }
     }
 
