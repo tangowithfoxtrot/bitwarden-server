@@ -885,6 +885,35 @@ public class CipherRepositoryTests
     }
 
     [DatabaseTheory, DatabaseData]
+    public async Task UpdateCiphersAsync_Works(ICipherRepository cipherRepository, IUserRepository userRepository)
+    {
+        var user = await userRepository.CreateAsync(new User
+        {
+            Name = "Test User",
+            Email = $"test+{Guid.NewGuid()}@email.com",
+            ApiKey = "TEST",
+            SecurityStamp = "stamp",
+        });
+
+        var cipher1 = await CreatePersonalCipher(user, cipherRepository);
+        var cipher2 = await CreatePersonalCipher(user, cipherRepository);
+
+        cipher1.Type = CipherType.SecureNote;
+        cipher2.Attachments = "new_attachments";
+
+        await cipherRepository.UpdateCiphersAsync(user.Id, [cipher1, cipher2]);
+
+        var updatedCipher1 = await cipherRepository.GetByIdAsync(cipher1.Id);
+        var updatedCipher2 = await cipherRepository.GetByIdAsync(cipher2.Id);
+
+        Assert.NotNull(updatedCipher1);
+        Assert.NotNull(updatedCipher2);
+
+        Assert.Equal(CipherType.SecureNote, updatedCipher1.Type);
+        Assert.Equal("new_attachments", updatedCipher2.Attachments);
+    }
+
+    [DatabaseTheory, DatabaseData]
     public async Task ArchiveAsync_Works(
         ICipherRepository sutRepository,
         IUserRepository userRepository)
